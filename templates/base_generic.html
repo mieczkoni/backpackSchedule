@@ -5,7 +5,21 @@
   {% block style %} {% endblock %}
 </head>
 <body>
-  {% block sidebar %} {% endblock %}
+  <div class="card">
+        <div class="container">
+            {% if user.is_authenticated %}
+                <ul>
+                    {% if user.username != "admin" %}
+                        <li><a href="#">SCHEDULE</a></li>
+                        <li><a class="active" href="#">RATING</a></li>
+                    {% else %}
+                        <li><a class="active">DATABASE</a></li>
+                    {% endif %}
+                    <li style="float: right; padding-right: 36px"><a href="{% url 'logout' %}">LOGOUT</a> </li>
+                </ul>
+            {% endif %}
+        </div>
+  </div>
   {% block content %} {% endblock %}
 </body>
 </html>
