@@ -69,7 +69,7 @@
                 {% for user in all_users %}
                     {% if user.username != "admin" %}
                         <tr>
-                            <th>{{ user.username }}</th>
+                            <th><a href="{% url "show_user" parameter=user.username %}" style="text-decoration: none; color: #00ABEB">{{ user.username }}</a></th>
                             <th>{{ user.profile.hours }}</th>
                             <th>{{ user.profile.rated }}</th>
                         </tr>

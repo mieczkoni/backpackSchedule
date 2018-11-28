@@ -68,8 +68,8 @@
                 </tr>
                 {% for rating in all_ratings %}
                     <tr>
-                        <th>{{ rating.user }}</th>
-                        <th>{{ rating.subject_id }}</th>
+                        <th><a href="{% url "show_user" parameter=rating.user.username %}" style="text-decoration: none; color: #00ABEB">{{ rating.user }}</a></th>
+                        <th><a href="{% url "show_subject" parameter=rating.subject_id %}" style="text-decoration: none; color: #00ABEB">{{ rating.subject_id }}</a></th>
                         <th>{{ rating.subject_rating }}</th>
                     </tr>
                 {% endfor %}

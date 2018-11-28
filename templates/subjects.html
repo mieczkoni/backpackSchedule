@@ -60,7 +60,7 @@
             <li><a href="{% url 'subject_ratings' %}">SUBJECTS RATINGS</a></li>
         </ul>
         <hr style="width: 90%; color: #CFCFCF;">
-            <table class="table" style="width: 100%; border: 2px;">
+            <table class="table" style="width: 100%;">
                 <tr>
                     <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">NAME</th>
                     <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">HOURS</th>
@@ -68,7 +68,7 @@
                 </tr>
                 {% for subject in all_subjects %}
                     <tr>
-                        <th>{{ subject.name }}</th>
+                        <th><a href="{% url "show_subject" parameter=subject.name %}" style="text-decoration: none; color: #00ABEB">{{ subject.name }}</a></th>
                         <th>{{ subject.hours }}</th>
                         <th>{{ subject.average_rating|floatformat:2 }}</th>
                     </tr>

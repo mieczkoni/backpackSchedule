@@ -13,7 +13,7 @@
                         <li><a href="#">SCHEDULE</a></li>
                         <li><a class="active" href="#">RATING</a></li>
                     {% else %}
-                        <li><a class="active">DATABASE</a></li>
+                        <li><a class="active" href="{% url 'index' %}">DATABASE</a></li>
                     {% endif %}
                     <li style="float: right; padding-right: 36px"><a href="{% url 'logout' %}">LOGOUT</a> </li>
                 </ul>

@@ -67,6 +67,27 @@ def admin_subject_ratings(request):
     return render(request, 'subject_ratings.html', context=context)
 
 
+def show_subject(request, parameter):
+    subject_ratings = SubjectRating.objects.filter(subject_id__name=parameter)
+    subject = Subject.objects.filter(name=parameter)
+    context = {
+        'subject_ratings': subject_ratings,
+        'subject_name': parameter,
+        'subject': subject
+    }
+    return render(request, 'subject.html', context=context)
+
+
+def show_user(request, parameter):
+    user_ratings = SubjectRating.objects.filter(user__username=parameter)
+    user = User.objects.filter(username=parameter)
+    context = {
+        'user_ratings': user_ratings,
+        'user_name': user
+    }
+    return render(request, 'user.html', context=context)
+
+
 def save_ratings(request):
     print("saving")
     all_subjects = Subject.objects.all()
@@ -117,4 +138,7 @@ def check_if_all_rated():
         if rated_subjects:
             if rated_subjects.count() == all_subjects.count():
                 user.profile.rated = True
+                user.save()
+            else:
+                user.profile.rated = False
                 user.save()
