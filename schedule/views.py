@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from schedule.models import Subject, SubjectRating, User
+from schedule.models import Subject, SubjectRating, User, UserSubject
 from django.views.generic import RedirectView
+from backpackSchedule import solver
 
 
 # Create your views here.
@@ -8,6 +9,7 @@ def index(request):
     """View function for home page of site."""
 
     if request.user.is_authenticated:
+        user_subjects = UserSubject.objects.filter(user__username=request.user.username)
         all_subjects = Subject.objects.all()
         all_ratings = SubjectRating.objects.all()
         all_users = User.objects.all()
@@ -25,6 +27,8 @@ def index(request):
             context = {
                 'all_subjects': all_subjects,
                 'user_ratings': user_ratings,
+                'user_subjects': user_subjects,
+                'user_subjects_count': user_subjects.count()
             }
             return render(request, 'index.html', context=context)
     else:
@@ -80,16 +84,17 @@ def show_subject(request, parameter):
 
 def show_user(request, parameter):
     user_ratings = SubjectRating.objects.filter(user__username=parameter)
+    user_subjects = UserSubject.objects.filter(user__username=parameter)
     user = User.objects.filter(username=parameter)
     context = {
         'user_ratings': user_ratings,
-        'user_name': user
+        'user_name': user,
+        'user_subjects': user_subjects
     }
     return render(request, 'user.html', context=context)
 
 
 def save_ratings(request):
-    print("saving")
     all_subjects = Subject.objects.all()
     for subject in all_subjects:
         subject_value = request.POST.get(subject.name, '3')
@@ -109,6 +114,78 @@ def save_ratings(request):
         'user_ratings': user_ratings,
     }
     return render(request, 'index.html', context=context)
+
+
+def solver_site(request):
+    calculate_filled_hours()
+    all_users = User.objects.all()
+    context = {
+        'users': all_users,
+    }
+    return render(request, 'solver.html', context=context)
+
+
+def solve_problem(request):
+    file = open("knapsacks_data.inst.dat", "w")
+    all_users = User.objects.all()
+    all_subjects = Subject.objects.all()
+    subjects_count = all_subjects.count()
+    for user in all_users:
+        if user.username != "admin":
+            user_ratings = SubjectRating.objects.filter(user__username=user.username)
+            line = str(user.id) + " "
+            line += str(subjects_count) + " "
+            line += str(user.profile.hours) + " "
+            for subject in all_subjects:
+                line += str(subject.hours)
+                line += " "
+                for rating in user_ratings:
+                    if rating.subject_id.name == subject.name:
+                        line += str(rating.subject_rating)
+                        line += " "
+            line += "\n"
+            file.write(line)
+    file.close()
+    solver.solver("knapsacks_data.inst.dat", "knapsacks_data.sol.dat")
+    analyze_values()
+
+    calculate_filled_hours()
+    all_users = User.objects.all()
+    context = {
+        'users': all_users,
+    }
+    return render(request, 'solver.html', context=context)
+
+
+def analyze_values():
+    UserSubject.objects.all().delete()
+    all_users = User.objects.all()
+    all_subjects = Subject.objects.all()
+    all_subjects_names = [subject.name for subject in all_subjects]
+    for user in all_users:
+        if user.username != "admin":
+            file = open("knapsacks_data.sol.dat", "r")
+            for line in file:
+                line_user_id = line.split()[0]
+                if user.id == int(line_user_id):
+                    user_results = line.split()[3:]
+                    for i in range(len(user_results)):
+                        if user_results[i] == "1":
+                            UserSubject.objects.create(user=user, subject=Subject.objects.get(name=all_subjects_names[i]))
+            file.close()
+    calculate_filled_hours()
+
+
+def calculate_filled_hours():
+    all_user_subject = UserSubject.objects.all()
+    all_users = User.objects.all()
+    for user in all_users:
+        filled_hours = 0
+        for pair in all_user_subject:
+            if pair.user == user:
+                filled_hours += pair.subject.hours
+        user.profile.filled_hours = filled_hours
+        user.save()
 
 
 def calculate_average_ratings():
@@ -142,3 +219,5 @@ def check_if_all_rated():
             else:
                 user.profile.rated = False
                 user.save()
+
+

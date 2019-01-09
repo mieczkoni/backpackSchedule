@@ -30,6 +30,7 @@ class SubjectRating(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     hours = models.IntegerField(default=0)
+    filled_hours = models.IntegerField(default=0)
     rated = models.BooleanField(default=False)
 
     def __str__(self):
@@ -43,3 +44,11 @@ class Profile(models.Model):
     @receiver(post_save, sender=User)
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
+
+
+class UserSubject(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.user.username

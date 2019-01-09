@@ -10,10 +10,9 @@
             {% if user.is_authenticated %}
                 <ul>
                     {% if user.username != "admin" %}
-                        <li><a href="#">SCHEDULE</a></li>
-                        <li><a class="active" href="#">RATING</a></li>
+                        {% block userblock %} {% endblock %}
                     {% else %}
-                        <li><a class="active" href="{% url 'index' %}">DATABASE</a></li>
+                        {% block adminblock %} {% endblock %}
                     {% endif %}
                     <li style="float: right; padding-right: 36px"><a href="{% url 'logout' %}">LOGOUT</a> </li>
                 </ul>

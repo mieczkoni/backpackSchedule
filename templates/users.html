@@ -51,6 +51,11 @@
     </style>
 {% endblock %}
 
+{% block adminblock %}
+    <li><a class="active" href="{% url 'index' %}">DATABASE</a></li>
+    <li><a href="{% url 'solver' %}">SOLVER</a> </li>
+{% endblock %}
+
 {% block content %}
     <div class="card">
         <div class="container">

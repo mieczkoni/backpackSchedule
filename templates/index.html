@@ -56,6 +56,10 @@
     </style>
 {% endblock %}
 
+{% block userblock %}
+    <li><a class="active">HOME</a></li>
+{% endblock %}
+
 {% block content %}
     <script>
     function refreshValue(id, value) {
@@ -68,8 +72,26 @@
     </script>
     <div class="card">
         <div class="container">
+            {% if user_subjects_count > 0 %}
+                <p>Your subjects.</p>
+                <hr style="width: 90%; color: #CFCFCF;">
+                <table class="table" width="100%">
+                <tr>
+                    <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">NAME</th>
+                    <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">HOURS</th>
+                </tr>
+                    {% for subject in user_subjects %}
+                        <tr>
+                            <th>{{ subject.subject.name }}</th>
+                            <th>{{ subject.subject.hours }}</th>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+
+            <br/>
             <p>Rate all subjects.</p>
-        <hr style="width: 90%; color: #CFCFCF;">
+            <hr style="width: 90%; color: #CFCFCF;">
             <form action="{% url 'save_ratings' %}" method="post">
             {% csrf_token %}
             <table class="table" width="100%">

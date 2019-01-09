@@ -19,8 +19,12 @@
         p {
             font-family: Roboto, serif;
             font-size: 20px;
-            padding-left: 24px;
-            padding-top: 32px;
+            text-align: center;
+        }
+        .p2 {
+            font-family: Roboto, serif;
+            font-size: 16px;
+            margin-left: 24px;
         }
         li {
             display: inline;
@@ -51,10 +55,33 @@
     </style>
 {% endblock %}
 
+{% block adminblock %}
+    <li><a class="active" href="{% url 'index' %}">DATABASE</a></li>
+    <li><a href="{% url 'solver' %}">SOLVER</a> </li>
+{% endblock %}
+
 {% block content %}
     <div class="card">
+        <p>{{ user_name.get.username }}</p>
         <div class="container">
-            <p>{{ user_name.get.username }}</p>
+            <div class="p2">SUBJECTS</div>
+            <hr style="width: 90%; color: #CFCFCF;">
+            <table class="table" style="width: 100%;">
+                <tr>
+                    <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">SUBJECT</th>
+                    <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">HOURS</th>
+                </tr>
+                {% for subject in user_subjects %}
+                   <tr>
+                        <th>{{ subject.subject.name }}</th>
+                        <th>{{ subject.subject.hours }}</th>
+                   </tr>
+                {% endfor %}
+            </table>
+
+            <br/>
+            <br/>
+            <div class="p2">RATINGS</div>
             <hr style="width: 90%; color: #CFCFCF;">
             <table class="table" style="width: 100%;">
                 <tr>
