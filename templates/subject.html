@@ -1,66 +1,19 @@
 {% extends "base_generic.html" %}
 
-{% block style %}
-    <style>
-        .card {
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-            display: block;
-            border-radius:5px;
-            width: 40%;
-            margin: 0 auto;
-            margin-bottom: 8px;
-            max-width: 100%;
-            max-height: 100%;
-            overflow: auto;
-        }
-        .container {
-            padding: 2px;
-        }
-        p {
-            font-family: Roboto, serif;
-            font-size: 20px;
-            padding-left: 24px;
-            padding-top: 32px;
-        }
-        li {
-            display: inline;
-            padding-right: 16px;
-            font-family: Roboto, serif;
-        }
-        li a {
-            display: inline;
-            color: black;
-            text-align: center;
-            text-decoration: none;
-        }
-        .active {
-            font-family: "Roboto Medium", serif;
-            color: #00ABEB;
-        }
-        .table tr {
-            font-family: "Roboto Light", serif;
-            font-size: 16px;
-            height: 40px;
-            margin-bottom: 90px;
-            width: 30%;
-        }
-        .table tr th {
-            font-family: "Roboto Thin", serif;
-            font-size: 14px;
-        }
-    </style>
-{% endblock %}
-
 {% block content %}
-    <div class="card">
-        <div class="container">
-            <p>{{ subject_name }}</p>
-            <hr style="width: 90%; color: #CFCFCF;">
-            <table class="table" style="width: 100%;">
-                <tr>
-                    <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">USERNAME</th>
-                    <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">RATING</th>
-                </tr>
+    <div class="card p-3 my-5 bg-white rounded mx-auto">
+        <div class="card-header">
+            <span>{{} subject_name }}</span>
+          </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" class="font-weight-bold">USERNAME</th>
+                        <th scope="col" class="font-weight-bold text-center">RATING</th>
+                    </tr>
+                </thead>
+                <tbody>
                 {% for subject_rate in subject_ratings %}
                    <tr>
                         <th>{{ subject_rate.user.username }}</th>
@@ -68,10 +21,11 @@
                    </tr>
                 {% endfor %}
                 <tr>
-                    <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">AVERAGE RATING:</th>
-                    <th>{{ subject.get.average_rating|floatformat:2 }}</th>
+                    <td style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">AVERAGE RATING:</td>
+                    <td>{{ subject.get.average_rating|floatformat:2 }}</td>
 
                 </tr>
+            </tbody>
             </table>
         </div>
     </div>

@@ -1,65 +1,4 @@
 {% extends "base_generic.html" %}
-
-{% block style %}
-    <style>
-        .card {
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-            display: block;
-            border-radius:5px;
-            width: 40%;
-            margin: 0 auto;
-            margin-bottom: 8px;
-            max-width: 100%;
-            max-height: 100%;
-            overflow: auto;
-        }
-        .container {
-            padding: 2px;
-        }
-        p {
-            font-family: Roboto, serif;
-            font-size: 20px;
-            padding-left: 24px;
-            padding-top: 32px;
-        }
-        .active {
-            font-family: "Roboto Medium", serif;
-            color: #00ABEB;
-        }
-        li {
-            display: inline;
-            padding-right: 16px;
-            font-family: Roboto, serif;
-        }
-        li a {
-            display: inline;
-            color: black;
-            text-align: center;
-            text-decoration: none;
-        }
-        .submit_button {
-            float: right;
-            margin: 32px 32px 16px 0;
-            padding: 8px 16px;
-            border-radius: 4px;
-            border-color: white;
-            background-color: #00ABEB;
-            box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
-            color: white;
-        }
-        .table tr th {
-            font-family: "Roboto Light", serif;
-            font-size: 16px;
-            margin-bottom: 90px;
-            width: 40%;
-        }
-    </style>
-{% endblock %}
-
-{% block userblock %}
-    <li><a class="active">HOME</a></li>
-{% endblock %}
-
 {% block content %}
     <script>
     function refreshValue(id, value) {
@@ -70,36 +9,54 @@
         document.getElementById(id).value = value;
     }
     </script>
-    <div class="card">
-        <div class="container">
-            {% if user_subjects_count > 0 %}
-                <p>Your subjects.</p>
-                <hr style="width: 90%; color: #CFCFCF;">
-                <table class="table" width="100%">
-                <tr>
-                    <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">NAME</th>
-                    <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">HOURS</th>
-                </tr>
+    <div class="card p-3 my-5 bg-white rounded mx-auto">
+        <div class="card-header">
+            <span>{{user.username}}</span>
+        </div>
+
+        {% if user_subjects_count > 0 %}
+        <div class="card-body">
+            <h4 class="card-title"><a>Your subjects</a></h4>
+                <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" class="font-weight-bold">Name</th>
+                        <th scope="col" class="font-weight-bold">HOURS</th>
+                    </tr>
+                </thead>
+                <tbody>
                     {% for subject in user_subjects %}
                         <tr>
-                            <th>{{ subject.subject.name }}</th>
-                            <th>{{ subject.subject.hours }}</th>
+                            <td>{{ subject.subject.name }}</td>
+                            <td>{{ subject.subject.hours }}</td>
                         </tr>
                     {% endfor %}
+                </tbody>
                 </table>
-            {% endif %}
+            </div>
+        {% endif %}
+        
+        
+        <div class="card-body">
 
-            <br/>
-            <p>Rate all subjects.</p>
-            <hr style="width: 90%; color: #CFCFCF;">
+            <h4 class="card-title"><a>Rate all subjects</a></h4>
+
             <form action="{% url 'save_ratings' %}" method="post">
             {% csrf_token %}
-            <table class="table" width="100%">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" class="font-weight-bold">Subject</th>
+                        <th scope="col" class="font-weight-bold"></th>
+                        <th scope="col" class="font-weight-bold text-center">Rate value</th>
+                    </tr>
+                </thead>
+                <tbody>
                 {% for subject in all_subjects %}
                     <tr>
-                        <th><label for="{{ subject.id }}">{{ subject.name }}</label></th>
-                        <th><input type="range" id="{{ subject.id }}" name="{{ subject.name }}" min="1" max="10" oninput="refreshValue('{{ subject.id }}_value', this.value)"></th>
-                        <th style="width: 20%;" id="{{ subject.id }}_value" >0</th>
+                        <td><label for="{{ subject.id }}">{{ subject.name }}</label></th>
+                        <td class="d-flex"><span class="font-weight-bold mr-2">1</span><input class="custom-range" type="range" id="{{ subject.id }}" name="{{ subject.name }}" min="1" max="10" oninput="refreshValue('{{ subject.id }}_value', this.value)"><span class="font-weight-bold ml-2">10</span></th>
+                        <td style="width: 20%; font-size: 1.2em; font-weight: bold;" class="text-center" id="{{ subject.id }}_value" >0</th>
                         <script>
                             setRangeValue('{{ subject.id }}', '1');
                         </script>
@@ -113,8 +70,9 @@
                         {% endfor %}
                     </tr>
                 {% endfor %}
+            </tbody>
             </table>
-            <input class="submit_button" type="submit" value="SUBMIT">
+            <input class="btn btn-info btn-block mx-auto" style="max-width: 200px" type="submit" value="SUBMIT">
             </form>
         </div>
     </div>
