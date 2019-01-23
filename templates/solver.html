@@ -1,91 +1,32 @@
 {% extends "base_generic.html" %}
 
-{% block style %}
-    <style>
-        .card {
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-            display: block;
-            border-radius:5px;
-            width: 40%;
-            margin: 0 auto;
-            margin-bottom: 8px;
-            max-width: 100%;
-            max-height: 100%;
-            overflow: auto;
-        }
-        .container {
-            padding: 2px;
-        }
-        p {
-            font-family: Roboto, serif;
-            font-size: 20px;
-            padding-left: 24px;
-            padding-top: 32px;
-        }
-        li {
-            display: inline;
-            padding-right: 16px;
-            font-family: Roboto, serif;
-        }
-        li a {
-            display: inline;
-            color: black;
-            text-align: center;
-            text-decoration: none;
-        }
-        .active {
-            font-family: "Roboto Medium", serif;
-            color: #00ABEB;
-        }
-        .table tr {
-            font-family: "Roboto Light", serif;
-            font-size: 16px;
-            height: 40px;
-            margin-bottom: 90px;
-            width: 30%;
-        }
-        .table tr th {
-            font-family: "Roboto Thin", serif;
-            font-size: 14px;
-        }
-        .submit_button {
-            float: right;
-            margin: 32px 32px 16px 0;
-            padding: 8px 16px;
-            border-radius: 4px;
-            border-color: white;
-            background-color: #00ABEB;
-            box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
-            color: white;
-        }
-    </style>
-{% endblock %}
-
-{% block adminblock %}
-    <li><a href="{% url 'index' %}">DATABASE</a></li>
-    <li><a class="active" href="{% url 'solver' %}">SOLVER</a> </li>
-{% endblock %}
-
 {% block content %}
-    <div class="card">
-        <div class="container">
-        <form action="{% url 'solve_problem' %}" method="post">
+    <div class="card p-3 my-5 bg-white rounded mx-auto">
+        <div class="card-header">
+        <span>Solver</span>
+      </div>
+        <div class="card-body">
+            <form action="{% url 'solve_problem' %}" method="post">
         {% csrf_token %}
-            <table class="table" style="width: 100%; border: 2px;">
-                <tr>
-                    <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">USERNAME</th>
-                    <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">FILLED HOURS</th>
-                </tr>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" class="font-weight-bold">Username</th>
+                        <th scope="col" class="font-weight-bold">Filled hours</th>
+                    </tr>
+                </thead>
+                <tbody>
                 {% for user in users %}
                     {% if user.username != "admin" %}
                         <tr>
-                            <th><a href="{% url "show_user" parameter=user.username %}" style="text-decoration: none; color: #00ABEB">{{ user.username }}</a></th>
-                            <th>{{ user.profile.filled_hours }} / {{ user.profile.hours }}</th>
+                            <td><a href="{% url "show_user" parameter=user.username %}" style="text-decoration: none; color: #00ABEB">{{ user.username }}</a></td>
+                            <td>{{ user.profile.filled_hours }} / {{ user.profile.hours }}</td>
                         </tr>
                     {% endif %}
                 {% endfor %}
+            </tbody>
             </table>
-        <input class="submit_button" type="submit" value="SOLVE KNAPSACK PROBLEM">
+        <input class="btn btn-info btn-block mx-auto" style="max-width: 300px" type="submit" value="SOLVE KNAPSACK PROBLEM">
         </form>
         </div>
     </div>

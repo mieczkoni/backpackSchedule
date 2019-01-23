@@ -1,24 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html style="position: relative; min-height: 100%;" lang="en">
 <head>
   {% block title %}<title>Schedule</title>{% endblock %}
-  {% block style %} {% endblock %}
-</head>
-<body>
-  <div class="card">
-        <div class="container">
-            {% if user.is_authenticated %}
-                <ul>
-                    {% if user.username != "admin" %}
-                        {% block userblock %} {% endblock %}
-                    {% else %}
-                        {% block adminblock %} {% endblock %}
-                    {% endif %}
-                    <li style="float: right; padding-right: 36px"><a href="{% url 'logout' %}">LOGOUT</a> </li>
-                </ul>
-            {% endif %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/bootstrap2.css' %}">
+  <link rel="stylesheet" href="{% static 'css/mdb.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/datatables.css' %}">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+  <script type="text/javascript" charset="utf-8" src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+  <script type="text/javascript" charset="utf-8" src="{% static 'js/popper.js' %}"></script>
+  <script type="text/javascript" charset="utf-8" src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script type="text/javascript" charset="utf-8" src="{% static 'js/datatables.js' %}"></script>
+
+  
+<body style="margin-top: 100px;">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-white">
+    <div class="container">
+      <a class="navbar-brand" href="">
+        <img src="{% static 'images/icons8-school-480.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+        AutoStudy
+      </a>
+
+      {% if user.is_authenticated %}
+        <div class="collapse navbar-collapse">
+          <ul class="navbar-nav mr-auto">
+            {% if user.username != "admin" %}
+              <!-- <li class="nav-item "><a class="nav-link" href="#">HOME</a></li> -->
+          {% else %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">DATABASE</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'solver' %}">SOLVER</a> </li>
+              <li class="nav-item"><a class="nav-link" data-toggle="modal" data-target="#popupSetting" href="#">SETTING</a> </li>
+              <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#popupSetting" data-whatever="@mdo">Open modal for @mdo</button> -->
+
+          {% endif %}
+          </ul>
+          <ul class="navbar-nav ml-auto nav-flex-icons">
+            <!-- <li class="nav-item"><a class="nav-link font-weight-bold text-danger" href="{% url 'logout' %}">LOGOUT</a> </li> -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'logout' %}">
+                <i class="fas fa-sign-out-alt"></i> LOGOUT</a>
+            </li>
+          </ul>
         </div>
+      {% endif %}
+    </div>
+  </nav>
+  <div class="modal fade" id="popupSetting" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Setting</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="{% url 'random_objects' %}" method="post">
+            {% csrf_token %}
+        <div class="modal-body">
+            <div class="form-group">
+              <label for="user-count" class="col-form-label">Number of users:</label>
+              <input type="number" class="form-control" id="user-count" name="user_count">
+            </div>
+            <div class="form-group">
+              <label for="subjects-count" class="col-form-label">Number of subjects:</label>
+               <input type="number" class="form-control" id="subjects-count" name="subjects_count">
+            </div>     
+        </div>
+        <div class="modal-footer">
+          <input class="btn btn-info btn-secondary" data-dismiss="modal" type="button" value="Close">
+            <input class="btn btn-info btn-primary" type="submit" value="Save">
+        </div>
+        </form>
+      </div>
+    </div>
   </div>
   {% block content %} {% endblock %}
+  <footer class="page-footer font-small special-color-dark" style="position: absolute;bottom: 0;width: 100%;">
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3">© 2019 Copyright:
+    <a href="#"> Mariusz Mieczkowski, Piotr Bigos, Piotr Kłos</a>
+  </div>
+  <!-- Copyright -->
+
+</footer>
 </body>
 </html>

@@ -10,5 +10,6 @@ urlpatterns = [
     path(r'^show_subject/(?P<parameter>)/$', views.show_subject, name='show_subject'),
     path(r'^show_user/(?P<parameter>)/$', views.show_user, name='show_user'),
     path('save_ratings', views.save_ratings, name='save_ratings'),
-    path('solve_problem', views.solve_problem, name='solve_problem')
+    path('solve_problem', views.solve_problem, name='solve_problem'),
+    path('random_objects', views.random_objects, name='random_objects')
 ]

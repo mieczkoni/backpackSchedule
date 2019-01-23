@@ -1,13 +1,11 @@
 from django.shortcuts import render
 from schedule.models import Subject, SubjectRating, User, UserSubject
 from django.views.generic import RedirectView
-from backpackSchedule import solver
+from backpackSchedule import solver_class, user_subject_count_manager as random_manager
 
 
 # Create your views here.
 def index(request):
-    """View function for home page of site."""
-
     if request.user.is_authenticated:
         user_subjects = UserSubject.objects.filter(user__username=request.user.username)
         all_subjects = Subject.objects.all()
@@ -119,13 +117,31 @@ def save_ratings(request):
 def solver_site(request):
     calculate_filled_hours()
     all_users = User.objects.all()
+    # for user in all_users:
+    #     if user.username != "admin":
+    #         user.delete()
+    # Subject.objects.all().delete()
+    # SubjectRating.objects.all().delete()
+    # UserSubject.objects.all().delete()
     context = {
         'users': all_users,
     }
     return render(request, 'solver.html', context=context)
 
 
-def solve_problem(request):
+def random_objects(request):
+    user_count = int(request.POST.get('user_count'))
+    subject_count = int(request.POST.get('subjects_count'))
+    random_manager.RandomizeAll(user_count, subject_count).randomize()
+    simulated_annealing()
+    all_users = User.objects.all()
+    context = {
+        'users': all_users,
+    }
+    return render(request, 'solver.html', context=context)
+
+
+def simulated_annealing():
     file = open("knapsacks_data.inst.dat", "w")
     all_users = User.objects.all()
     all_subjects = Subject.objects.all()
@@ -146,9 +162,12 @@ def solve_problem(request):
             line += "\n"
             file.write(line)
     file.close()
-    solver.solver("knapsacks_data.inst.dat", "knapsacks_data.sol.dat")
+    solver_class.SimulatedAnnealing("knapsacks_data.inst.dat", "knapsacks_data.sol.dat").solver()
     analyze_values()
 
+
+def solve_problem(request):
+    simulated_annealing()
     calculate_filled_hours()
     all_users = User.objects.all()
     context = {

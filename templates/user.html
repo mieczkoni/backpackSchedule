@@ -1,99 +1,49 @@
 {% extends "base_generic.html" %}
 
-{% block style %}
-    <style>
-        .card {
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-            display: block;
-            border-radius:5px;
-            width: 40%;
-            margin: 0 auto;
-            margin-bottom: 8px;
-            max-width: 100%;
-            max-height: 100%;
-            overflow: auto;
-        }
-        .container {
-            padding: 2px;
-        }
-        p {
-            font-family: Roboto, serif;
-            font-size: 20px;
-            text-align: center;
-        }
-        .p2 {
-            font-family: Roboto, serif;
-            font-size: 16px;
-            margin-left: 24px;
-        }
-        li {
-            display: inline;
-            padding-right: 16px;
-            font-family: Roboto, serif;
-        }
-        li a {
-            display: inline;
-            color: black;
-            text-align: center;
-            text-decoration: none;
-        }
-        .active {
-            font-family: "Roboto Medium", serif;
-            color: #00ABEB;
-        }
-        .table tr {
-            font-family: "Roboto Light", serif;
-            font-size: 16px;
-            height: 40px;
-            margin-bottom: 90px;
-            width: 30%;
-        }
-        .table tr th {
-            font-family: "Roboto Thin", serif;
-            font-size: 14px;
-        }
-    </style>
-{% endblock %}
-
-{% block adminblock %}
-    <li><a class="active" href="{% url 'index' %}">DATABASE</a></li>
-    <li><a href="{% url 'solver' %}">SOLVER</a> </li>
-{% endblock %}
-
 {% block content %}
-    <div class="card">
-        <p>{{ user_name.get.username }}</p>
-        <div class="container">
-            <div class="p2">SUBJECTS</div>
-            <hr style="width: 90%; color: #CFCFCF;">
-            <table class="table" style="width: 100%;">
-                <tr>
-                    <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">SUBJECT</th>
-                    <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">HOURS</th>
-                </tr>
+    <div class="card p-3 my-5 bg-white rounded mx-auto">
+        <div class="card-header">
+        <span>{{ user_name.get.username }}</span>
+      </div>
+        <div class="card-body">
+
+            <!-- <h4 class="card-title"><a>{{ user_name.get.username }}</a></h4> -->
+
+            <h4 class="card-title"><a>SUBJECTS</a></h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" class="font-weight-bold">SUBJECT</th>
+                        <th scope="col" class="font-weight-bold">HOURS</th>
+                    </tr>
+                </thead>
+                <tbody> 
                 {% for subject in user_subjects %}
                    <tr>
-                        <th>{{ subject.subject.name }}</th>
-                        <th>{{ subject.subject.hours }}</th>
+                       <td><a href="{% url "show_subject" parameter=subject.subject.name %}">{{ subject.subject.name }}</a></td>
+                        <td>{{ subject.subject.hours }}</td>
                    </tr>
                 {% endfor %}
+                </tbody>
             </table>
-
-            <br/>
-            <br/>
-            <div class="p2">RATINGS</div>
-            <hr style="width: 90%; color: #CFCFCF;">
-            <table class="table" style="width: 100%;">
-                <tr>
-                    <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">SUBJECT</th>
-                    <th style="color: #00ABEB; font-family: 'Roboto Light', serif; font-size: 16px">RATING</th>
-                </tr>
+        </div>
+        <div class="card-body">
+            <h4 class="card-title"><a>RATINGS</a></h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" class="font-weight-bold">SUBJECT</th>
+                        <th scope="col" class="font-weight-bold">RATING</th>
+                    </tr>
+                </thead>
+                <tbody> 
                 {% for user_rate in user_ratings %}
                    <tr>
-                        <th>{{ user_rate.subject_id }}</th>
-                        <th>{{ user_rate.subject_rating }}</th>
+                       <td><a href="{% url "show_subject" parameter=user_rate.subject_id.name %}">{{ user_rate.subject_id }}</a></td>
+                        <td>{{ user_rate.subject_rating }}</td>
                    </tr>
                 {% endfor %}
+                </tbody>
             </table>
         </div>
     </div>
