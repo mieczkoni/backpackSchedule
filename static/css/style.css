@@ -26,3 +26,11 @@ table th {
 h4 {
 	text-transform: uppercase;
 }
+
+a {
+	color: #00ABEB;
+}
+
+.pagination .page-item.active .page-link {
+	background-color: #00ABEB;
+}
